@@ -2,3 +2,5 @@ venv/
 .github/
 data/raw/
 data/metadata/
+data/rejected/
+data/cleaned/

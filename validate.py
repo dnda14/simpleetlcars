@@ -37,16 +37,49 @@ def verify_datatype(df:pd.DataFrame):
 
 def validate_rows(df: pd.DataFrame):
     conditions = (
-        (df['year']>=1950) &
-        (df['year']<=datetime.now(timezone.utc).year) &
+        (df['Year']>=1950) &
+        (df['Year']<=datetime.now(timezone.utc).year) &
         (df['MSRP']>0) &
         (df['highway MPG']> 0)  &
-        (df['highway mpg']>0) 
+        (df['city mpg']>0) 
     )
-    valid = df[conditions].copy #apply filter mask
-    invalid = df[~conditions].copy 
+    valid = df[conditions].copy() #apply filter mask
+    invalid = df[~conditions].copy()
     
     return valid, invalid
 
+def save_outputs(valid , invalid, batch_id):
+    CLEAN_DIR = Path('data/cleaned')
+    CLEAN_DIR.mkdir(parents=True, exist_ok=True)
+    
+    REJECT_DIR = Path('data/rejected')
+    REJECT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    valid.to_csv(CLEAN_DIR / f"cars_clean_{batch_id}.csv")
+    invalid.to_csv(CLEAN_DIR / f"cars_reject_{batch_id}.csv")
+    
 
+
+def show_metrics(df,valid, invalid):
+    return{
+        " # rows": len(df),
+        "# valid":len(valid),
+        "# invalid":len(invalid),
+        "invalid %":(len(invalid)/len(df))*100
+    }
+
+def run_validation(raw_file: Path, batch_id: str):
+    df = read_raw(raw_file)
+    verify_col(df)
+    df = verify_datatype(df)
+    valid, invalid = validate_rows(df)
+    save_outputs(valid, invalid, batch_id)
+
+    metrics = show_metrics(df, valid, invalid)
+    print(metrics)
+    
+run_validation(Path('data/raw/cars_raw_20260128_115136.csv'), '20260128_115136')
+
+    
+    
     
