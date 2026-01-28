@@ -26,7 +26,23 @@ checksum = file_checksum(raw_file)
 
 
 CONTROL_FILE  = Path("data/metadata/processed_files.csv")
+CONTROL_FILE.parent.mkdir(parents=True, exist_ok=True)
 
+is_new = not CONTROL_FILE.exists()
+
+with open(CONTROL_FILE,'a', newline="") as f:
+    writer = csv.writer(f)
+    if is_new:
+        writer.writerow(["batch_id", "file_name", "checksum", "processed_at"])
+        
+    writer.writerow([
+        batch_id,
+        raw_file,
+        checksum,
+        datetime.now(timezone.utc).isoformat()
+    ])
+
+    
 
 
 
