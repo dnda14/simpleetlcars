@@ -35,4 +35,18 @@ def verify_datatype(df:pd.DataFrame):
             df[col]=pd.to_numeric(df[col],errors='coerce') if tp != str else df[col].astype(str)    
     return df
 
+def validate_rows(df: pd.DataFrame):
+    conditions = (
+        (df['year']>=1950) &
+        (df['year']<=datetime.now(timezone.utc).year) &
+        (df['MSRP']>0) &
+        (df['highway MPG']> 0)  &
+        (df['highway mpg']>0) 
+    )
+    valid = df[conditions].copy #apply filter mask
+    invalid = df[~conditions].copy 
+    
+    return valid, invalid
+
+
     
