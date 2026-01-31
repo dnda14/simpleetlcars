@@ -1,7 +1,7 @@
 import pandas as pd
 
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime,timezone
 
 def load_csv(path_csv):
     return pd.read_csv(path_csv)
@@ -20,5 +20,21 @@ def finalize_types(df:pd.DataFrame):
             df[col] = df[col].astype('uint32')
             
     return df
-            
+
+def rich_df(df:pd.DataFrame):
+    year_now = datetime.now(timezone.utc).year
+    df['Age'] = year_now - df['Year']
+    df['consume_eff'] = df['high MPG']/df['city mpg']
+    return df
+
+def deduplication(df:pd.DataFrame):
+    len_i = len(df)
+    df = df.drop_duplicates(
+        subset=['Make','Model','Year','Engine HP'],
+        keep='first')
+    n_dropped = len_i - len(df)
+    
+    print(f"{n_dropped} rows was dropped.")
+    return df
+    
 normalize(load_csv(Path('data/cleaned/cars_clean_20260128_115136.csv')))
