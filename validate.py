@@ -56,9 +56,8 @@ def save_outputs(valid , invalid, batch_id):
     REJECT_DIR.mkdir(parents=True, exist_ok=True)
     
     valid.to_csv(CLEAN_DIR / f"cars_clean_{batch_id}.csv")
-    invalid.to_csv(CLEAN_DIR / f"cars_reject_{batch_id}.csv")
+    invalid.to_csv(REJECT_DIR / f"cars_reject_{batch_id}.csv")
     
-
 
 def show_metrics(df,valid, invalid):
     return{
