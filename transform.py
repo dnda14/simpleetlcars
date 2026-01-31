@@ -9,7 +9,7 @@ def load_csv(path_csv):
 def normalize(df:pd.DataFrame):
     cols_df = df.select_dtypes(include='str').columns # object is deprecater
     for col in cols_df:
-        df[col] = df[col].strip().lower()
+        df[col] = df[col].str.strip().str.lower()
 
     return df
 
@@ -17,14 +17,14 @@ def convert_types(df:pd.DataFrame):
     int_cols = ['Year','Engine HP', 'Engine Cylinders','Number of Doors','highway MPG','city mpg','Popularity','MSRP']
     for col in int_cols:
         if col in df.columns:
-            df[col] = df[col].astype('uint32')
+            df[col] = df[col].astype('Int64')
             
     return df
 
 def rich_df(df:pd.DataFrame):
     year_now = datetime.now(timezone.utc).year
     df['Age'] = year_now - df['Year']
-    df['consume_eff'] = df['high MPG']/df['city mpg']
+    df['consume_eff'] = df['highway MPG']/df['city mpg']
     return df
 
 def deduplicate(df:pd.DataFrame):
@@ -54,8 +54,9 @@ def transform(path):
     
     DIR_TRANS = Path('data/transformed')
     DIR_TRANS.mkdir(parents=True,exist_ok=True)
-    time_n = datetime.now(timezone.utc)
-    df.to_csv(DIR_TRANS/f"cars_transformed_{time_n}.csv",index=False)
+    batch_id =datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
+    df.to_csv(DIR_TRANS/f"cars_transformed_{batch_id}.csv",index=False)
     
     return df
     
