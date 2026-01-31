@@ -13,7 +13,7 @@ def normalize(df:pd.DataFrame):
 
     return df
 
-def finalize_types(df:pd.DataFrame):
+def convert_types(df:pd.DataFrame):
     int_cols = ['Year','Engine HP', 'Engine Cylinders','Number of Doors','highway MPG','city mpg','Popularity','MSRP']
     for col in int_cols:
         if col in df.columns:
@@ -27,7 +27,7 @@ def rich_df(df:pd.DataFrame):
     df['consume_eff'] = df['high MPG']/df['city mpg']
     return df
 
-def deduplication(df:pd.DataFrame):
+def deduplicate(df:pd.DataFrame):
     len_i = len(df)
     df = df.drop_duplicates(
         subset=['Make','Model','Year','Engine HP'],
@@ -36,5 +36,28 @@ def deduplication(df:pd.DataFrame):
     
     print(f"{n_dropped} rows was dropped.")
     return df
+
+def apply_rules(df: pd.DataFrame):
+    df= df[df['Age'] <= 40]
+    df = df[df['consume_eff'] >0]
     
-normalize(load_csv(Path('data/cleaned/cars_clean_20260128_115136.csv')))
+    return df
+
+def transform(path):
+    path = Path(path)
+    df = load_csv(path)
+    df = normalize(df)
+    df = convert_types(df)
+    df = rich_df(df)
+    df = deduplicate(df)
+    df = apply_rules(df)
+    
+    DIR_TRANS = Path('data/transformed')
+    DIR_TRANS.mkdir(parents=True,exist_ok=True)
+    time_n = datetime.now(timezone.utc)
+    df.to_csv(DIR_TRANS/f"cars_transformed_{time_n}.csv",index=False)
+    
+    return df
+    
+
+print(transform('data/cleaned/cars_clean_20260128_115136.csv'))
