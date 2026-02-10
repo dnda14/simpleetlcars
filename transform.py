@@ -60,5 +60,5 @@ def transform(path):
     
     return df
     
-
-print(transform('data/cleaned/cars_clean_20260128_115136.csv'))
+if __name__ == "__main__":
+    print(transform('data/cleaned/cars_clean_20260128_115136.csv'))
