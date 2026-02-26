@@ -40,18 +40,23 @@ def validate_parquet():
     assert table.num_rows > 0, 'is empty'
 
 def run_storage(trfd_file:Path):
-    logger.info('starting transformation')
-    df = load_transformed(trfd_file)
-    logger.info(f'laoded files with {len(df)} rows')
-    
-    df = add_ingestion_time(df)
-    
-    to_parquet(df)
-    logger.info('parqeut written')
+    try:
+        
+        logger.info('starting transformation')
+        df = load_transformed(trfd_file)
+        logger.info(f'laoded files with {len(df)} rows')
+        
+        df = add_ingestion_time(df)
+        
+        to_parquet(df)
+        logger.info('parqeut written')
 
-    validate_parquet()
-    logger.info('parquet validated')
-    logger.info('phase completed')
+        validate_parquet()
+        logger.info('parquet validated')
+        logger.info('phase completed')
+    except Exception as e:
+        logger.error(f'error pipeline: {str(e)}')
+        raise
 
 
 run_storage(Path('data/transformed/cars_transformed_20260131_052019.csv'))
