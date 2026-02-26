@@ -4,7 +4,11 @@ from datetime import datetime, timezone
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+import logging
+from logger_config import log_register
 
+log_register()
+logger = logging.getLogger(__name__) #to get the file name
 
 #df = transform('data/transformed/cars_transformed_20260131_052019.csv')
 
@@ -36,13 +40,18 @@ def validate_parquet():
     assert table.num_rows > 0, 'is empty'
 
 def run_storage(trfd_file:Path):
+    logger.info('starting transformation')
     df = load_transformed(trfd_file)
+    logger.info(f'laoded files with {len(df)} rows')
+    
     df = add_ingestion_time(df)
+    
     to_parquet(df)
+    logger.info('parqeut written')
 
     validate_parquet()
-    
-
+    logger.info('parquet validated')
+    logger.info('phase completed')
 
 
 run_storage(Path('data/transformed/cars_transformed_20260131_052019.csv'))

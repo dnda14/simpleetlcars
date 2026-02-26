@@ -12,4 +12,7 @@ df = con.execute("""
     ORDER BY ingest_date DESC
 """).df()
 
+
 print(df)
+
+

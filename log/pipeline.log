@@ -1,0 +1,5 @@
+2026-02-26 14:58:46,903 | INFO | starting transformation
+2026-02-26 14:58:46,940 | INFO | laoded files with 3758 rows
+2026-02-26 14:58:47,521 | INFO | parqeut written
+2026-02-26 14:58:47,556 | INFO | parquet validated
+2026-02-26 14:58:47,557 | INFO | phase completed
