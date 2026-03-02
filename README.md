@@ -1,6 +1,7 @@
 # ETLCars - Vehicle Data ETL Pipeline
 
 A robust ETL (Extract, Transform, Load) pipeline for processing vehicle/car datasets. This project handles the complete data lifecycle from raw source files to analytics-ready Parquet datasets.
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/3aae2c26-eb77-4ddb-832a-642ab4d77928" />
 
 ## Features
 
