@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+import time
 import logging
 from logger_config import log_register
 
@@ -40,6 +41,7 @@ def validate_parquet():
     assert table.num_rows > 0, 'is empty'
 
 def run_storage(trfd_file:Path):
+    start_time = time.perf_counter()
     try:
         
         logger.info('starting transformation')
@@ -53,7 +55,13 @@ def run_storage(trfd_file:Path):
 
         validate_parquet()
         logger.info('parquet validated')
+        duration = round(time.perf_counter() - start_time, 3)
+        logger.info(f'execution time {duration}')
+        
+        
         logger.info('phase completed')
+        
+        
     except Exception as e:
         logger.error(f'error pipeline: {str(e)}')
         raise
